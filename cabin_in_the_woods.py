@@ -53,8 +53,9 @@ def game():
         if "entered" not in entered:
             time.sleep(5)
             print("\nA loud BANG brings you to your senses. The door just slammed behind you. It's locked. The key is on the outside...")
-            time.sleep(1)
-            print("\nYou need to get out.")
+            time.sleep(4)
+            print("\n\033[31mYou need to get out.\033[0m")
+            time.sleep(3)
             entered.append("entered")
         print("\nActions:\nEnter kitchen\nGo through door\nEnter bedroom")
         time.sleep(2)
