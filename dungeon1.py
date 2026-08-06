@@ -20,30 +20,32 @@ clear = "\033[0m"
 x = 3
 y = 1
 
+random_options = ["nothing", "a slime", "a witch", "a goblin", "a chest", "a shop"]
+
 dungeon_layout = {
-    (1,1) : "random",
+    (1,1) : "mega chest",
     (2,1) : "wall",
     (3,1) : "nothing",
     (4,1) : "a slime",
-    (5,1) : "a shop",
+    (5,1) : "a chest",
     (1,2) : "wall",
     (2,2) : "a chest",
     (3,2) : "wall",
-    (4,2) : "a shop",
+    (4,2) : "a slime",
     (5,2) : "a slime",
     (1,3) : "a witch",
     (2,3) : "a chest",
-    (3,3) : "wall",
-    (4,3) : "a shop",
+    (3,3) : "random",
+    (4,3) : "wall",
     (5,3) : "random",
     (1,4) : "wall",
     (2,4) : "wall",
-    (3,4) : "a shop",
+    (3,4) : "wall",
     (4,4) : "wall",
-    (5,4) : "wall",
-    (1,5) : "a goblin",
+    (5,4) : "a shop",
+    (1,5) : "a dragon",
     (2,5) : "a goblin",
-    (3,5) : "a dragon",
+    (3,5) : "a goblin",
     (4,5) : "a goblin",
     (5,5) : "a goblin",
 }
@@ -57,54 +59,61 @@ enemy_characteristics = {}
 prize = {}
 
 slime_characteristics = {
-    "health" : 5,
-    "attack" : 1,
-    "armor" : 0,
+    "health" : 10,
+    "attack" : 6,
+    "armor" : 2,
 }
 
 witch_characteristics = {
-    "health" : 8,
-    "attack" : 2,
-    "armor" : 2,
+    "health" : 16,
+    "attack" : 4,
+    "armor" : 6,
 }
 
 goblin_characteristics = {
-    "health" : 11,
-    "attack" : 3,
-    "armor" : 2,
+    "health" : 22,
+    "attack" : 6,
+    "armor" : 8,
 }
 
 dragon_characteristics = {
-    "health" : 20,
-    "attack" : 5,
-    "armor" : 3,
+    "health" : 50,
+    "attack" : 10,
+    "armor" : 8,
 }
 
+
+shop_items = [f"{bold}{red}HP potion{white} - {yellow}5g\n{bold}{red}  +4 health{clear}", f"{bold}Iron armor {clear}- {bold}{yellow}3g\n  +2 armor{clear}", f"{bold}{yellow}HOLY HAND GRENADE{clear} - {bold}{yellow}10g{clear}\n  {bold}When fighting the dragon, the dragon loses {bold}{red}5 health{white}, and you lose {red}2 health{white} from the {yellow}HOLY HAND GRENADE{clear}."]
+
+chest_contents = ["iron armor", "hp potion", "strength potion"]
 
 player_characteristics = {}
 
+player_money = 0
+hhg = 0
+
 human_characteristics = {
-    "health" : 8,
-    "attack" : 2,
-    "armor" : 1,
+    "health" : 16,
+    "attack" : 4,
+    "armor" : 2,
 }
 
 dwarf_characteristics = {
-    "health" : 9,
-    "attack" : 2,
-    "armor" : 0,
+    "health" : 20,
+    "attack" : 6,
+    "armor" : 2,
 }
 
 wizard_characteristics = {
-    "health" : 7,
-    "attack" : 2,
-    "armor" : 2,
+    "health" : 14,
+    "attack" : 4,
+    "armor" : 4,
 }
 
 elf_characteristics = {
-    "health" : 6,
-    "attack" : 3,
-    "armor" : 2,
+    "health" : 12,
+    "attack" : 5,
+    "armor" : 3,
 }
 
 rizzard_characteristics = {
@@ -138,8 +147,11 @@ def choose_species():
         elif species == "elf":
             global elf_characteristics
             player_characteristics = elf_characteristics.copy()
+        elif species == "rizzard":
+            global rizzard_characteristics
+            player_characteristics = rizzard_characteristics.copy()
         time.sleep(1)
-        print(f"You have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear} and {bold}{blue}{player_characteristics["armor"]} armor{clear}.")
+        print(f"You have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
 
 
 def fight(enemy):
@@ -153,18 +165,32 @@ def fight(enemy):
     elif enemy == "a witch":
         global witch_characteristics
         enemy_characteristics = witch_characteristics.copy()
-        prize = witch_characteristics.copy()
         enemy = "witch"
     elif enemy == "a goblin":
         global goblin_characteristics
         enemy_characteristics = goblin_characteristics.copy()
-        prize = goblin_characteristics.copy()
         enemy = "goblin"
     elif enemy == "a dragon":
         global dragon_characteristics
         enemy_characteristics = dragon_characteristics.copy()
-        prize = dragon_characteristics.copy()
+        if hhg == 1:
+            print(f"{red}")
+            print(r"""
+░████████     ░██████     ░██████   ░███     ░███ 
+░██    ░██   ░██   ░██   ░██   ░██  ░████   ░████ 
+░██    ░██  ░██     ░██ ░██     ░██ ░██░██ ░██░██ 
+░████████   ░██     ░██ ░██     ░██ ░██ ░████ ░██ 
+░██     ░██ ░██     ░██ ░██     ░██ ░██  ░██  ░██ 
+░██     ░██  ░██   ░██   ░██   ░██  ░██       ░██ 
+░█████████    ░██████     ░██████   ░██       ░██ 
+""")
+            enemy_characteristics["health"] -= 5
+            player_characteristics["health"] -= 2
+            print(f"{bold}{yellow}THE HOLY HAND GRENADE{clear} went off and the {bold}{yellow}dragon{clear} lost {bold}{red}5 health{clear} and you lost {bold}{red}2 health{clear}.")
         enemy = "dragon"
+    prize["armor"] = 1
+    prize["attack"] = random.randint(1,2)
+    prize["health"] = random.randint(1,4)
     print(f"\nYou are fighting a {bold}{yellow}{enemy}{clear}!")
     time.sleep(1)
     print(f"\nThe {bold}{yellow}{enemy}{clear} has {bold}{green}{enemy_characteristics["health"]} health{clear}, does {red}{bold}{enemy_characteristics["attack"]} damage{clear} and has {blue}{bold}{enemy_characteristics["armor"]} armor{clear}.")
@@ -198,14 +224,29 @@ def fight(enemy):
         print("\n\n")
         sys.exit()
     else:
+        global player_money
         print(f"\n{bold}{yellow}You defeated the {enemy}!{clear}")
         time.sleep(1)
-        print(f"\nYou gained {bold}{green}{prize["health"]} health{clear}, {bold}{red}{prize["attack"]} attack damage{clear} and {bold}{blue}{prize["armor"]} armor{clear}.")
-        player_characteristics["health"] += prize["health"]
-        player_characteristics["attack"] += prize["attack"]
-        player_characteristics["armor"] += prize["armor"]
-        time.sleep(1)
-        print(f"\nYou now have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear} and {bold}{blue}{player_characteristics["armor"]} armor{clear}.")
+        if enemy != "dragon" or enemy != "goblin":
+            print(f"\nYou gained {bold}{green}{prize["health"]} health{clear}, {bold}{red}{prize["attack"]} attack damage{clear} and {bold}{blue}{prize["armor"]} armor{clear}.")
+            player_characteristics["health"] += prize["health"]
+            player_characteristics["attack"] += prize["attack"]
+            player_characteristics["armor"] += prize["armor"]
+            time.sleep(1)
+            print(f"\nYou now have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
+            dungeon_layout[x,y] = "nothing"
+            match enemy:
+                case "slime":
+                    player_money += 3
+                    print(f"You found {bold}{yellow}3 gold{clear}!")
+                case "witch":
+                    player_money += 5
+                    print(f"You found {bold}{yellow}5 gold{clear}!")
+                case "goblin":
+                    player_money += 7
+                    print(f"You found {bold}{yellow}7 gold{clear}!")
+        else:
+            pass
 
 
 
@@ -219,14 +260,79 @@ def fight_or_not(current_room):
         print(f"\n{bold}{red}That's not one of the options.{clear}")
         fight_or_not(current_room)
 
+
+def shop():
+    global shop_items
+    time.sleep(1)
+    print(f"{bold}{yellow}Joshua Peter James Fletcher's Shop{clear} has the following items in stock:")
+    for item in shop_items:
+        time.sleep(1)
+        print("\n")
+        print(item)
+    time.sleep(1)
+    buy_item = input(f"\n{bold}{cyan}What would you like to buy?\n{red}HP potion\n{white}Iron armor\n{yellow}THE HOLY HAND GRENADE{clear}\n\t")
+    global hhg
+    global player_money
+    time.sleep(1)
+    match buy_item.lower():
+        case "hp potion":
+            if player_money >= 5:
+                player_money -= 5
+                player_characteristics["health"] += 4
+                print(f"You gained {bold}{red}4 health{clear}.")
+            else:
+                print(f"You don't have enough{bold}{yellow} gold{clear}.")
+        case "iron armor":
+            if player_money >= 3:
+                player_money -= 3
+                player_characteristics["armor"] += 1
+                print(f"You gained {bold}{blue}2 armor{clear}.")
+            else:
+                print(f"You don't have enough{bold}{yellow} gold{clear}.")
+        case "the holy hand grenade":
+            if player_money >= 10:
+                player_money -= 10
+                hhg = 1
+                print(f"You gained {bold}{yellow}THE HOLY HAND GRENADE{clear}.")
+            else:
+                print(f"You don't have enough{bold}{yellow} gold{clear}.")
+        case _:
+            print(f"{bold}{red}That's not one of the options.{clear}")
+            shop()
+    dungeon_layout[x,y] = "nothing"
+
+
+def chest():
+    global chest_contents
+    item = chest_contents[random.randint(0, 2)]
+    print("\n")
+    match item:
+        case "iron armor":
+            print(f"You open the {bold}{yellow}chest{clear} and inside, you find some {bold}{white}iron armor{clear}!\nYou put it on and gain {bold}{blue}2 armor{clear}.")
+            player_characteristics["armor"] += 2
+        case "hp potion":
+            print(f"You open the {bold}{yellow}chest{clear} and inside, you find a {bold}{red}HP potion{clear}!\nYou drink it and gain {bold}{green}4 health{clear}.")
+            player_characteristics["health"] += 4
+        case "strength potion":
+            print(f"You open the {bold}{yellow}chest{clear} and inside, you find a {bold}{yellow}strength potion{clear}!\nYou drink it and gain {bold}{red}2 attack{clear}.")
+            player_characteristics["attack"] += 2
+
+
 def read_room():
     global x
     global y
+    global random_options
     current_room = dungeon_layout[x,y]
+    if current_room == "random":
+        current_room = random_options[random.randint(0, 5)]
     time.sleep(1)
     print(f"\nIn this room there is {bold}{yellow}{current_room}{clear}.")
     if current_room == "a slime" or current_room == "a witch" or current_room == "a goblin" or current_room == "a dragon":
         fight_or_not(current_room)
+    if current_room == "a shop":
+        shop()
+    if current_room == "a chest":
+        chest()
     time.sleep(1)
     direction = input(f"\n{bold}{cyan}Which way would you like to go?{clear}\n\nLeft\nRight\nBackwards\nForwards\n\t")
     direction = direction.lower()
@@ -272,7 +378,9 @@ def read_room():
 
 
 
-print(f"{brown}{bold}")
+
+
+print(f"{brown}{bold}\n\n\n\n\n")
 print(r""" ____  _   _ _   _  ____ _____ ___  _   _       
 |  _ \| | | | \ | |/ ___| ____/ _ \| \ | |      
 | | | | | | |  \| | |  _|  _|| | | |  \| |      
@@ -282,6 +390,7 @@ print(r""" ____  _   _ _   _  ____ _____ ___  _   _
 | |   | |_) |  / _ \ \ /\ / /| |   |  _| | |_) |
 | |___|  _ <  / ___ \ V  V / | |___| |___|  _ < 
  \____|_| \_\/_/   \_\_/\_/  |_____|_____|_| \_\ """)
+print(f"{clear}")
 
 time.sleep(3)
 
