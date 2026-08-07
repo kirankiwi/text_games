@@ -23,20 +23,20 @@ y = 1
 random_options = ["nothing", "a slime", "a witch", "a goblin", "a chest", "a shop"]
 
 dungeon_layout = {
-    (1,1) : "mega chest",
-    (2,1) : "wall",
+    (1,1) : "a chest",
+    (2,1) : "a slime",
     (3,1) : "nothing",
-    (4,1) : "a slime",
+    (4,1) : "wall",
     (5,1) : "a chest",
-    (1,2) : "wall",
+    (1,2) : "nothing",
     (2,2) : "a chest",
     (3,2) : "wall",
     (4,2) : "a slime",
     (5,2) : "a slime",
-    (1,3) : "a witch",
-    (2,3) : "a chest",
+    (1,3) : "random",
+    (2,3) : "random",
     (3,3) : "random",
-    (4,3) : "wall",
+    (4,3) : "random",
     (5,3) : "random",
     (1,4) : "wall",
     (2,4) : "wall",
@@ -66,19 +66,19 @@ slime_characteristics = {
 
 witch_characteristics = {
     "health" : 16,
-    "attack" : 4,
-    "armor" : 6,
+    "attack" : 7,
+    "armor" : 4,
 }
 
 goblin_characteristics = {
     "health" : 22,
-    "attack" : 6,
+    "attack" : 12,
     "armor" : 8,
 }
 
 dragon_characteristics = {
     "health" : 50,
-    "attack" : 10,
+    "attack" : 15,
     "armor" : 8,
 }
 
@@ -93,26 +93,26 @@ player_money = 0
 hhg = 0
 
 human_characteristics = {
-    "health" : 16,
+    "health" : 24,
     "attack" : 4,
     "armor" : 2,
 }
 
 dwarf_characteristics = {
-    "health" : 20,
+    "health" : 22,
     "attack" : 6,
     "armor" : 2,
 }
 
 wizard_characteristics = {
-    "health" : 14,
-    "attack" : 4,
-    "armor" : 4,
+    "health" : 20,
+    "attack" : 2,
+    "armor" : 6,
 }
 
 elf_characteristics = {
-    "health" : 12,
-    "attack" : 5,
+    "health" : 16,
+    "attack" : 6,
     "armor" : 3,
 }
 
@@ -155,24 +155,7 @@ def choose_species():
 
 
 def fight(enemy):
-    if enemy == "a slime":
-        global enemy_characteristics
-        global slime_characteristics
-        global prize
-        enemy_characteristics = slime_characteristics.copy()
-        prize = slime_characteristics.copy()
-        enemy = "slime"
-    elif enemy == "a witch":
-        global witch_characteristics
-        enemy_characteristics = witch_characteristics.copy()
-        enemy = "witch"
-    elif enemy == "a goblin":
-        global goblin_characteristics
-        enemy_characteristics = goblin_characteristics.copy()
-        enemy = "goblin"
-    elif enemy == "a dragon":
-        global dragon_characteristics
-        enemy_characteristics = dragon_characteristics.copy()
+    if enemy == "dragon":
         if hhg == 1:
             print(f"{red}")
             print(r"""
@@ -191,6 +174,7 @@ def fight(enemy):
     prize["armor"] = 1
     prize["attack"] = random.randint(1,2)
     prize["health"] = random.randint(1,4)
+    time.sleep(2)
     print(f"\nYou are fighting a {bold}{yellow}{enemy}{clear}!")
     time.sleep(1)
     print(f"\nThe {bold}{yellow}{enemy}{clear} has {bold}{green}{enemy_characteristics["health"]} health{clear}, does {red}{bold}{enemy_characteristics["attack"]} damage{clear} and has {blue}{bold}{enemy_characteristics["armor"]} armor{clear}.")
@@ -216,24 +200,26 @@ def fight(enemy):
     if player_characteristics["health"] == 0:
         print(f"{bold}{red}\n\nYou died.\n\n")
         time.sleep(2)
-        print(r"""  ____    _    __  __ _____    _____     _______ ____  
+        print(r"""
+  ____    _    __  __ _____    _____     _______ ____  
  / ___|  / \  |  \/  | ____|  / _ \ \   / / ____|  _ \ 
 | |  _  / _ \ | |\/| |  _|   | | | \ \ / /|  _| | |_) |
 | |_| |/ ___ \| |  | | |___  | |_| |\ V / | |___|  _ < 
- \____/_/   \_\_|  |_|_____|  \___/  \_/  |_____|_| \_\ """)
+ \____/_/   \_\_|  |_|_____|  \___/  \_/  |_____|_| \_\ 
+ """)
         print("\n\n")
         sys.exit()
     else:
         global player_money
         print(f"\n{bold}{yellow}You defeated the {enemy}!{clear}")
         time.sleep(1)
-        if enemy != "dragon" or enemy != "goblin":
-            print(f"\nYou gained {bold}{green}{prize["health"]} health{clear}, {bold}{red}{prize["attack"]} attack damage{clear} and {bold}{blue}{prize["armor"]} armor{clear}.")
+        if enemy != "dragon":
+            if enemy != "dragon":
+                print(f"\nYou gained {bold}{green}{prize["health"]} health{clear}, {bold}{red}{prize["attack"]} attack damage{clear} and {bold}{blue}{prize["armor"]} armor{clear}.")
             player_characteristics["health"] += prize["health"]
             player_characteristics["attack"] += prize["attack"]
             player_characteristics["armor"] += prize["armor"]
             time.sleep(1)
-            print(f"\nYou now have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
             dungeon_layout[x,y] = "nothing"
             match enemy:
                 case "slime":
@@ -245,20 +231,62 @@ def fight(enemy):
                 case "goblin":
                     player_money += 7
                     print(f"You found {bold}{yellow}7 gold{clear}!")
+            time.sleep(1)
+            print(f"\nYou now have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
         else:
-            pass
+            print(f"{bold}{yellow}You succeeded in your mission of vanquishing the dragon!{clear}")
+            print(f"{green}")
+            print(r"""
+__   _____  _   _  __        _____ _   _ 
+\ \ / / _ \| | | | \ \      / /_ _| \ | |
+ \ V / | | | | | |  \ \ /\ / / | ||  \| |
+  | || |_| | |_| |   \ V  V /  | || |\  |
+  |_| \___/ \___/     \_/\_/  |___|_| \_|
+  """)
+            sys.exit()
 
 
-
-def fight_or_not(current_room):
+def fight_or_not(enemy):
+    if enemy == "a slime":
+        global enemy_characteristics
+        global slime_characteristics
+        global prize
+        enemy_characteristics = slime_characteristics.copy()
+        prize = slime_characteristics.copy()
+        enemy = "slime"
+    elif enemy == "a witch":
+        global witch_characteristics
+        enemy_characteristics = witch_characteristics.copy()
+        enemy = "witch"
+    elif enemy == "a goblin":
+        global goblin_characteristics
+        enemy_characteristics = goblin_characteristics.copy()
+        enemy = "goblin"
+    elif enemy == "a dragon":
+        global dragon_characteristics
+        enemy_characteristics = dragon_characteristics.copy()
+        enemy = "dragon"
     time.sleep(1)
     choice = input(f"\n{bold}{cyan}Do you want to {red}fight it{cyan} or {blue}run{clear}?\n\nFight\nRun\n\t")
     if choice.lower() == "fight":
-        fight(current_room)
-    elif choice.lower() != "run":
+        fight(enemy)
+    elif choice.lower() == "run":
+        run_or_not = random.randint(0, 1)
+        if run_or_not == 0:
+            time.sleep(1)
+            print(f"You evade the {bold}{yellow}{enemy}{clear} and can leave the room.")
+        else:
+            time.sleep(1)
+            print(f"The {bold}{yellow}{enemy}{clear} blocks the exit.")
+            time.sleep(2)
+            print("You cannot escape.")
+            time.sleep(2)
+            print(f"You must fight the {bold}{yellow}{enemy}{clear}.")
+            fight(enemy)
+    else:
         time.sleep(1)
         print(f"\n{bold}{red}That's not one of the options.{clear}")
-        fight_or_not(current_room)
+        fight_or_not(enemy)
 
 
 def shop():
@@ -305,7 +333,7 @@ def shop():
 def chest():
     global chest_contents
     item = chest_contents[random.randint(0, 2)]
-    print("\n")
+    time.sleep(1)
     match item:
         case "iron armor":
             print(f"You open the {bold}{yellow}chest{clear} and inside, you find some {bold}{white}iron armor{clear}!\nYou put it on and gain {bold}{blue}2 armor{clear}.")
@@ -316,6 +344,7 @@ def chest():
         case "strength potion":
             print(f"You open the {bold}{yellow}chest{clear} and inside, you find a {bold}{yellow}strength potion{clear}!\nYou drink it and gain {bold}{red}2 attack{clear}.")
             player_characteristics["attack"] += 2
+    dungeon_layout[x,y] = "nothing"
 
 
 def read_room():
@@ -325,6 +354,7 @@ def read_room():
     current_room = dungeon_layout[x,y]
     if current_room == "random":
         current_room = random_options[random.randint(0, 5)]
+        dungeon_layout[x,y] = current_room
     time.sleep(1)
     print(f"\nIn this room there is {bold}{yellow}{current_room}{clear}.")
     if current_room == "a slime" or current_room == "a witch" or current_room == "a goblin" or current_room == "a dragon":
@@ -380,8 +410,9 @@ def read_room():
 
 
 
-print(f"{brown}{bold}\n\n\n\n\n")
-print(r""" ____  _   _ _   _  ____ _____ ___  _   _       
+print(f"{brown}{bold}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+print(r"""
+ ____  _   _ _   _  ____ _____ ___  _   _       
 |  _ \| | | | \ | |/ ___| ____/ _ \| \ | |      
 | | | | | | |  \| | |  _|  _|| | | |  \| |      
 | |_| | |_| | |\  | |_| | |__| |_| | |\  |      
@@ -389,8 +420,9 @@ print(r""" ____  _   _ _   _  ____ _____ ___  _   _
  / ___|  _ \    / \ \      / / |   | ____|  _ \ 
 | |   | |_) |  / _ \ \ /\ / /| |   |  _| | |_) |
 | |___|  _ <  / ___ \ V  V / | |___| |___|  _ < 
- \____|_| \_\/_/   \_\_/\_/  |_____|_____|_| \_\ """)
-print(f"{clear}")
+ \____|_| \_\/_/   \_\_/\_/  |_____|_____|_| \_\ 
+ """)
+print(f"{clear}\n\n\n\n\n\n")
 
 time.sleep(3)
 
