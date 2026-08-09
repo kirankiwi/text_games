@@ -106,8 +106,8 @@ dwarf_characteristics = {
 
 wizard_characteristics = {
     "health" : 20,
-    "attack" : 2,
-    "armor" : 6,
+    "attack" : 3,
+    "armor" : 5,
 }
 
 elf_characteristics = {
@@ -186,7 +186,7 @@ def fight(enemy):
         enemy_characteristics["health"] -= player_damage
         if enemy_characteristics["health"] < 0:
             enemy_characteristics["health"] = 0
-        print(f"\nYou {bold}{red}attacked{clear} the {bold}{yellow}{enemy}{clear} and dealt {bold}{red}{player_damage} damage{clear}.\nIts {bold}{blue}armor{clear} stopped {bold}{red}{enemy_characteristics['armor']} damage{clear}.\nIt has {bold}{green}{enemy_characteristics['health']} health{clear} left.")
+        print(f"\nYou {bold}{red}attack{clear} the {bold}{yellow}{enemy}{clear} and deal {bold}{red}{player_damage} damage{clear}.\nIts {bold}{blue}armor{clear} stops {bold}{red}{enemy_characteristics['armor']} damage{clear}.\nIt has {bold}{green}{enemy_characteristics['health']} health{clear} left.")
         if enemy_characteristics["health"] > 0:
             enemy_damage = random.randint(-1, 1) + enemy_characteristics["attack"] - player_characteristics["armor"]
             if enemy_damage < 0:
@@ -195,7 +195,7 @@ def fight(enemy):
             player_characteristics["health"] -= enemy_damage
             if player_characteristics["health"] < 0:
                 player_characteristics["health"] = 0
-            print(f"\nThe {bold}{yellow}{enemy} {red}attacked{clear} you and dealt {bold}{red}{enemy_damage} damage{clear}.\nYour {bold}{blue}armor{clear} stopped {bold}{red}{player_characteristics['armor']} damage{clear}.\nYou have {bold}{green}{player_characteristics['health']} health{clear} left.")
+            print(f"\nThe {bold}{yellow}{enemy} {red}attacks{clear} you and deals {bold}{red}{enemy_damage} damage{clear}.\nYour {bold}{blue}armor{clear} stops {bold}{red}{player_characteristics['armor']} damage{clear}.\nYou have {bold}{green}{player_characteristics['health']} health{clear} left.")
     time.sleep(2)
     if player_characteristics["health"] == 0:
         print(f"{bold}{red}\n\nYou died.\n\n")
