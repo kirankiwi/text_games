@@ -31,8 +31,8 @@ dungeon_layout = {
     (1,2) : "nothing",
     (2,2) : "a chest",
     (3,2) : "wall",
-    (4,2) : "a slime",
-    (5,2) : "a slime",
+    (4,2) : "a witch",
+    (5,2) : "a witch",
     (1,3) : "random",
     (2,3) : "random",
     (3,3) : "random",
@@ -93,7 +93,7 @@ player_money = 0
 hhg = 0
 
 human_characteristics = {
-    "health" : 24,
+    "health" : 35,
     "attack" : 4,
     "armor" : 2,
 }
@@ -122,6 +122,35 @@ rizzard_characteristics = {
     "armor" : 41,
 }
 
+
+dungeon_map = """
+DUNGEON MAP
+ _____   _____   _____   _____   _____ 
+|  D  ===  G  ===  G  ===  G  ===  G  |
+ ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾   ‾| |‾
+                                 _| |_ 
+                                |  ?  |
+                                 ‾| |‾
+ _____   _____   _____   _____   _| |_ 
+|  ?  ===  ?  ===  ?  ===  ?  ===  ?  |
+ ‾| |‾   ‾| |‾   ‾‾‾‾‾   ‾| |‾   ‾| |‾
+ _| |_   _| |_           _| |_   _| |_ 
+|  N  ===  C  |         |  W  ===  W  |
+ ‾| |‾   ‾| |‾           ‾‾‾‾‾   ‾| |‾
+ _| |_   _| |_   _____           _| |_ 
+|  C  ===  S  ===  X  |         |  C  |
+ ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾           ‾‾‾‾‾
+X = Entrance
+N = Nothing
+C = Chest
+S = Slime
+W = Witch
+G = Goblin
+D = Dragon
+? = Unknown
+Your Mission:
+Defeat the dragon.
+"""
 
 
 def choose_species():
@@ -186,7 +215,7 @@ def fight(enemy):
         enemy_characteristics["health"] -= player_damage
         if enemy_characteristics["health"] < 0:
             enemy_characteristics["health"] = 0
-        print(f"\nYou {bold}{red}attack{clear} the {bold}{yellow}{enemy}{clear} and deal {bold}{red}{player_damage} damage{clear}.\nIts {bold}{blue}armor{clear} stops {bold}{red}{enemy_characteristics['armor']} damage{clear}.\nIt has {bold}{green}{enemy_characteristics['health']} health{clear} left.")
+        print(f"\nYou {bold}{red}attack{clear} the {bold}{yellow}{enemy}{clear} and deal {bold}{red}{player_damage} damage{clear}.\nIts {bold}{blue}armor{clear} blocks {bold}{red}{enemy_characteristics['armor']} damage{clear}.\nIt has {bold}{green}{enemy_characteristics['health']} health{clear} left.")
         if enemy_characteristics["health"] > 0:
             enemy_damage = random.randint(-1, 1) + enemy_characteristics["attack"] - player_characteristics["armor"]
             if enemy_damage < 0:
@@ -195,7 +224,7 @@ def fight(enemy):
             player_characteristics["health"] -= enemy_damage
             if player_characteristics["health"] < 0:
                 player_characteristics["health"] = 0
-            print(f"\nThe {bold}{yellow}{enemy} {red}attacks{clear} you and deals {bold}{red}{enemy_damage} damage{clear}.\nYour {bold}{blue}armor{clear} stops {bold}{red}{player_characteristics['armor']} damage{clear}.\nYou have {bold}{green}{player_characteristics['health']} health{clear} left.")
+            print(f"\nThe {bold}{yellow}{enemy} {red}attacks{clear} you and deals {bold}{red}{enemy_damage} damage{clear}.\nYour {bold}{blue}armor{clear} blocks {bold}{red}{player_characteristics['armor']} damage{clear}.\nYou have {bold}{green}{player_characteristics['health']} health{clear} left.")
     time.sleep(2)
     if player_characteristics["health"] == 0:
         print(f"{bold}{red}\n\nYou died.\n\n")
@@ -211,9 +240,10 @@ def fight(enemy):
         sys.exit()
     else:
         global player_money
-        print(f"\n{bold}{yellow}You defeated the {enemy}!{clear}")
-        time.sleep(1)
         if enemy != "dragon":
+            print(f"\n{bold}{yellow}You defeated the {enemy}!{clear}")
+        time.sleep(1)
+        if enemy != "dragon" and enemy != "goblin":
             if enemy != "dragon":
                 print(f"\nYou gained {bold}{green}{prize["health"]} health{clear}, {bold}{red}{prize["attack"]} attack damage{clear} and {bold}{blue}{prize["armor"]} armor{clear}.")
             player_characteristics["health"] += prize["health"]
@@ -228,9 +258,6 @@ def fight(enemy):
                 case "witch":
                     player_money += 5
                     print(f"You found {bold}{yellow}5 gold{clear}!")
-                case "goblin":
-                    player_money += 7
-                    print(f"You found {bold}{yellow}7 gold{clear}!")
             time.sleep(1)
             print(f"\nYou now have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
         else:
@@ -291,6 +318,8 @@ def fight_or_not(enemy):
 
 def shop():
     global shop_items
+    global hhg
+    global player_money
     time.sleep(1)
     print(f"{bold}{yellow}Joshua Peter James Fletcher's Shop{clear} has the following items in stock:")
     for item in shop_items:
@@ -298,9 +327,8 @@ def shop():
         print("\n")
         print(item)
     time.sleep(1)
-    buy_item = input(f"\n{bold}{cyan}What would you like to buy?\n{red}HP potion\n{white}Iron armor\n{yellow}THE HOLY HAND GRENADE{clear}\n\t")
-    global hhg
-    global player_money
+    print(f"You have {bold}{yellow}{player_money} gold{clear}.")
+    buy_item = input(f"\n{bold}{cyan}What would you like to buy?\n{red}HP potion\n{white}Iron armor\n{yellow}THE HOLY HAND GRENADE{clear}\nNothing\n\t")
     time.sleep(1)
     match buy_item.lower():
         case "hp potion":
@@ -324,6 +352,8 @@ def shop():
                 print(f"You gained {bold}{yellow}THE HOLY HAND GRENADE{clear}.")
             else:
                 print(f"You don't have enough{bold}{yellow} gold{clear}.")
+        case "nothing":
+            pass
         case _:
             print(f"{bold}{red}That's not one of the options.{clear}")
             shop()
@@ -364,7 +394,7 @@ def read_room():
     if current_room == "a chest":
         chest()
     time.sleep(1)
-    direction = input(f"\n{bold}{cyan}Which way would you like to go?{clear}\n\nLeft\nRight\nBackwards\nForwards\n\t")
+    direction = input(f"\n{bold}{cyan}Which way would you like to go?{clear}\n\nLeft\nRight\nBackwards\nForwards\nView Map\nView Player Stats\n\t")
     direction = direction.lower()
     if direction == "left":
         x -= 1
@@ -384,7 +414,7 @@ def read_room():
         if (x,y) not in dungeon_layout.keys():
             x -= 1
             print(f"{bold}{red}\nYou cannot go that way. There is a wall.{clear}")
-    if direction == "forwards":
+    if direction == "forwards" or direction == "forward":
         y += 1
         if (x,y) in dungeon_layout.keys():
             if dungeon_layout[x,y] == "wall":
@@ -393,7 +423,7 @@ def read_room():
         if (x,y) not in dungeon_layout.keys():
             y -= 1
             print(f"{bold}{red}\nYou cannot go that way. There is a wall.{clear}")
-    if direction == "backwards":
+    if direction == "backwards" or direction == "backward":
         y -= 1
         if (x,y) in dungeon_layout.keys():
             if dungeon_layout[x,y] == "wall":
@@ -402,7 +432,14 @@ def read_room():
         if (x,y) not in dungeon_layout.keys():
             y += 1
             print(f"{bold}{red}\nYou cannot go that way. There is a wall.{clear}")
-    elif direction != "backwards" and direction != "forwards" and direction != "right" and direction != "left":
+    if direction == "view map":
+        time.sleep(1)
+        print(dungeon_map)
+        time.sleep(2)
+    if direction == "view player stats":
+        time.sleep(1)
+        print(f"You have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
+    elif direction != "backwards" and direction != "forwards" and direction != "forward" and direction != "backward" and direction != "right" and direction != "left" and direction != "view map" and direction != "view player stats":
         print(f"{bold}{red}That's not one of the options.{clear}")
     read_room()
 
@@ -423,6 +460,10 @@ print(r"""
  \____|_| \_\/_/   \_\_/\_/  |_____|_____|_| \_\ 
  """)
 print(f"{clear}\n\n\n\n\n\n")
+
+time.sleep(3)
+
+print(dungeon_map)
 
 time.sleep(3)
 
