@@ -124,32 +124,34 @@ rizzard_characteristics = {
 
 
 dungeon_map = """
-DUNGEON MAP
- _____   _____   _____   _____   _____ 
-|  D  ===  G  ===  G  ===  G  ===  G  |
- ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾   ‾| |‾
-                                 _| |_ 
-                                |  ?  |
-                                 ‾| |‾
- _____   _____   _____   _____   _| |_ 
-|  ?  ===  ?  ===  ?  ===  ?  ===  ?  |
- ‾| |‾   ‾| |‾   ‾‾‾‾‾   ‾| |‾   ‾| |‾
- _| |_   _| |_           _| |_   _| |_ 
-|  N  ===  C  |         |  W  ===  W  |
- ‾| |‾   ‾| |‾           ‾‾‾‾‾   ‾| |‾
- _| |_   _| |_   _____           _| |_ 
-|  C  ===  S  ===  X  |         |  C  |
- ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾           ‾‾‾‾‾
-X = Entrance
-N = Nothing
-C = Chest
-S = Slime
-W = Witch
-G = Goblin
-D = Dragon
-? = Unknown
-Your Mission:
-Defeat the dragon.
+ _______________________________________
+|DUNGEON MAP                            |
+| _____   _____   _____   _____   _____ |
+||  D  ===  G  ===  G  ===  G  ===  G  ||
+| ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾   ‾| |‾ |
+|                                 _| |_ |
+|                                |  ?  ||
+|                                 ‾| |‾ |
+| _____   _____   _____   _____   _| |_ |
+||  ?  ===  ?  ===  ?  ===  ?  ===  ?  ||
+| ‾| |‾   ‾| |‾   ‾‾‾‾‾   ‾| |‾   ‾| |‾ |
+| _| |_   _| |_           _| |_   _| |_ |
+||  N  ===  C  |         |  W  ===  W  ||
+| ‾| |‾   ‾| |‾           ‾‾‾‾‾   ‾| |‾ |
+| _| |_   _| |_   _____           _| |_ |
+||  C  ===  S  ===  X  |         |  C  ||
+| ‾‾‾‾‾   ‾‾‾‾‾   ‾‾‾‾‾           ‾‾‾‾‾ |
+|X = Entrance                           |
+|N = Nothing                            |
+|C = Chest                              |
+|S = Slime                              |
+|W = Witch                              |
+|G = Goblin                             |
+|D = Dragon                             |
+|? = Unknown                            |
+|Your Mission:                          |
+|Defeat the dragon.                     |
+ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 """
 
 
@@ -244,23 +246,22 @@ def fight(enemy):
             print(f"\n{bold}{yellow}You defeated the {enemy}!{clear}")
         time.sleep(1)
         if enemy != "dragon" and enemy != "goblin":
-            if enemy != "dragon":
-                print(f"\nYou gained {bold}{green}{prize["health"]} health{clear}, {bold}{red}{prize["attack"]} attack damage{clear} and {bold}{blue}{prize["armor"]} armor{clear}.")
+            print(f"\nYou gained {bold}{green}{prize["health"]} health{clear}, {bold}{red}{prize["attack"]} attack damage{clear} and {bold}{blue}{prize["armor"]} armor{clear}.")
             player_characteristics["health"] += prize["health"]
             player_characteristics["attack"] += prize["attack"]
             player_characteristics["armor"] += prize["armor"]
-            time.sleep(1)
-            dungeon_layout[x,y] = "nothing"
-            match enemy:
-                case "slime":
-                    player_money += 3
-                    print(f"You found {bold}{yellow}3 gold{clear}!")
-                case "witch":
-                    player_money += 5
-                    print(f"You found {bold}{yellow}5 gold{clear}!")
-            time.sleep(1)
-            print(f"\nYou now have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
-        else:
+        time.sleep(1)
+        dungeon_layout[x,y] = "nothing"
+        match enemy:
+            case "slime":
+                player_money += 3
+                print(f"You found {bold}{yellow}3 gold{clear}!")
+            case "witch":
+                player_money += 5
+                print(f"You found {bold}{yellow}5 gold{clear}!")
+        time.sleep(1)
+        print(f"\nYou now have {bold}{green}{player_characteristics["health"]} health, {red}{player_characteristics["attack"]} attack{white}{clear}, {bold}{blue}{player_characteristics["armor"]} armor{clear}, and {bold}{yellow}{player_money} gold{clear}.")
+        if enemy == "dragon":
             print(f"{bold}{yellow}You succeeded in your mission of vanquishing the dragon!{clear}")
             print(f"{green}")
             print(r"""
